@@ -1,6 +1,6 @@
 {
   "name": "build-data",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Get metadata for your build.",
   "homepage": "https://github.com/sholladay/build-data",
   "main": "index.js",
