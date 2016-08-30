@@ -29,7 +29,8 @@
   ],
   "dependencies": {
     "branch-name": "^0.1.4",
-    "build-version": "^0.2.0"
+    "build-version": "^0.2.0",
+    "pkg-dir": "^1.0.0"
   },
   "devDependencies": {
     "eslint-config-tidy": "^0.3.0",

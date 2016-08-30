@@ -30,6 +30,13 @@ buildData().then((data) => {
 });
 ```
 
+Get the data that was used for the most recent build.
+
+```js
+buildData.latest().then((data) => {
+    console.log('data:', data);
+});
+
 You can and should provide any data you know already.
 
 ```js

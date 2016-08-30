@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const pkgDir = require('pkg-dir');
 const branchName = require('branch-name');
 const buildVersion = require('build-version');
 
@@ -19,9 +20,10 @@ const realpath = (fp) => {
 
 const buildData = (option) => {
     const config = Object.assign({}, option);
+
     return Promise.all([
-        config.branch || branchName.assumeMaster(),
-        config.version || buildVersion()
+        config.branch || branchName.assumeMaster({ cwd : config.cwd }),
+        config.version || buildVersion({ cwd : config.cwd })
     ])
         .then((data) => {
             return {
@@ -32,12 +34,7 @@ const buildData = (option) => {
 };
 
 buildData.latest = (option) => {
-    const config = Object.assign(
-        {
-            cwd : ''
-        },
-        option
-    );
+    const config = Object.assign({}, option);
 
     if (config.branch && config.version) {
         return Promise.resolve({
@@ -46,13 +43,17 @@ buildData.latest = (option) => {
         });
     }
 
-    const linkPath = config.branch ? path.join('build', config.branch, 'latest') : 'latest-build';
+    return pkgDir(config.cwd).then((appRoot) => {
+        const linkPath = config.branch ?
+            path.join('build', config.branch, 'latest') :
+            'latest-build';
 
-    return realpath(path.join(config.cwd, linkPath)).then((resolvedPath) => {
-        return {
-            branch  : config.branch || path.basename(path.join(resolvedPath, '..')),
-            version : config.version || path.basename(resolvedPath)
-        };
+        return realpath(path.join(appRoot, linkPath)).then((resolvedPath) => {
+            return {
+                branch  : config.branch || path.basename(path.join(resolvedPath, '..')),
+                version : config.version || path.basename(resolvedPath)
+            };
+        });
     });
 };
 
