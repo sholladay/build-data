@@ -20,10 +20,11 @@ const realpath = (fp) => {
 
 const buildData = (option) => {
     const config = Object.assign({}, option);
+    const { cwd } = config;
 
     return Promise.all([
-        config.branch || branchName.assumeMaster({ cwd : config.cwd }),
-        config.version || buildVersion({ cwd : config.cwd })
+        config.branch || branchName.assumeMaster({ cwd }),
+        config.version || buildVersion({ cwd })
     ])
         .then((data) => {
             return {
@@ -35,23 +36,24 @@ const buildData = (option) => {
 
 buildData.latest = (option) => {
     const config = Object.assign({}, option);
+    const { branch, version, cwd } = config;
 
-    if (config.branch && config.version) {
+    if (branch && version) {
         return Promise.resolve({
-            branch  : config.branch,
-            version : config.version
+            branch,
+            version
         });
     }
 
-    return pkgDir(config.cwd).then((appRoot) => {
-        const linkPath = config.branch ?
-            path.join('build', config.branch, 'latest') :
+    return pkgDir(cwd).then((appRoot) => {
+        const linkPath = branch ?
+            path.join('build', branch, 'latest') :
             'latest-build';
 
         return realpath(path.join(appRoot, linkPath)).then((resolvedPath) => {
             return {
-                branch  : config.branch || path.basename(path.join(resolvedPath, '..')),
-                version : config.version || path.basename(resolvedPath)
+                branch  : branch || path.basename(path.join(resolvedPath, '..')),
+                version : version || path.basename(resolvedPath)
             };
         });
     });
