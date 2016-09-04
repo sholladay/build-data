@@ -2,13 +2,12 @@
 
 const fs = require('fs');
 const path = require('path');
-const pkgDir = require('pkg-dir');
 const branchName = require('branch-name');
 const buildVersion = require('build-version');
 
-const realpath = (fp) => {
+const realpath = (filePath) => {
     return new Promise((resolve, reject) => {
-        fs.realpath(fp, (err, resolvedPath) => {
+        fs.realpath(filePath, (err, resolvedPath) => {
             if (err) {
                 reject(err);
                 return;
@@ -45,17 +44,15 @@ buildData.latest = (option) => {
         });
     }
 
-    return pkgDir(cwd).then((appRoot) => {
-        const linkPath = branch ?
-            path.join('build', branch, 'latest') :
-            'latest-build';
+    const linkPath = branch ?
+        path.join('build', branch, 'latest') :
+        'latest-build';
 
-        return realpath(path.join(appRoot, linkPath)).then((resolvedPath) => {
-            return {
-                branch  : branch || path.basename(path.join(resolvedPath, '..')),
-                version : version || path.basename(resolvedPath)
-            };
-        });
+    return realpath(path.join(cwd || '', linkPath)).then((resolvedPath) => {
+        return {
+            branch  : branch || path.basename(path.join(resolvedPath, '..')),
+            version : version || path.basename(resolvedPath)
+        };
     });
 };
 
