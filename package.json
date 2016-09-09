@@ -29,6 +29,7 @@
   ],
   "dependencies": {
     "branch-name": "^0.1.4",
+    "build-path": "^0.1.0",
     "build-version": "^0.2.0"
   },
   "devDependencies": {

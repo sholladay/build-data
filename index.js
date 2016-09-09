@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const branchName = require('branch-name');
 const buildVersion = require('build-version');
+const buildPath = require('build-path');
 
 const realpath = (filePath) => {
     return new Promise((resolve, reject) => {
@@ -45,7 +46,10 @@ buildData.latest = (option) => {
     }
 
     const linkPath = branch ?
-        path.join('build', branch, 'latest') :
+        buildPath({
+            branch,
+            version : 'latest'
+        }) :
         'latest-build';
 
     return realpath(path.join(cwd || '', linkPath)).then((resolvedPath) => {
