@@ -22,11 +22,15 @@ Get it into your program.
 const buildData = require('build-data');
 ```
 
-Get the current [branch name](https://github.com/sholladay/branch-name) and [build version](https://github.com/sholladay/build-version) to be associated with your build.
+Get the current [branch name](https://github.com/sholladay/branch-name) and a [version](https://github.com/sholladay/build-version) to be associated with your build.
 
 ```js
 buildData().then((data) => {
     console.log('data:', data);
+    // {
+    //     branch  : 'master',
+    //     version : '1.0.0'
+    // }
 });
 ```
 
@@ -45,6 +49,60 @@ buildData({ version : '3.2.1' }).then((data) => {
     console.log('data:', data);
 });
 ```
+
+## API
+
+### buildData(option)
+
+#### option
+
+Type: `object`
+
+Settings and known build metadata.
+
+##### cwd
+
+Type: `string`<br>
+Default: `process.cwd()`
+
+The parent directory of the build root.
+
+##### branch
+
+Type: `string`
+
+Use the given branch name, instead of asking git.
+
+##### version
+
+Type: `string`
+
+Use the given version, instead of asking [build-version](https://github.com/sholladay/build-version).
+
+### buildData.latest(option)
+
+Same as `buildData()`, except the `branch` defaults to the most recently built branch and `version` defaults to the most recently built version of the branch.
+
+### buildDir.link(option)
+
+Takes `cwd`, `branch`, and `version` on the option object.
+
+Within the `cwd`, writes a symlink at `latest-build` pointing to `build/<branch>/latest` and from there to `<version>`.
+
+### buildDir.prepare(option)
+
+Returns a promise for an object with these fields:
+
+ - `path` is a newly created temporary directory for you to write the build to.
+ - `finalize()` moves `path` to its final location and runs `buildDir.link()` on it.
+
+## Related
+
+ - [build-version](https://github.com/sholladay/build-version) - Get a version for your build.
+ - [build-dir](https://github.com/sholladay/build-dir) - Get a place to put your build.
+ - [build-path](https://github.com/sholladay/build-path) - Get a path for the given build.
+ - [build-keys](https://github.com/sholladay/build-keys) - Get the paths of files from your build.
+ - [build-files](https://github.com/sholladay/build-files) - Read the files from your build.
 
 ## Contributing
 
