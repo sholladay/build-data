@@ -18,31 +18,30 @@ const realpath = (filePath) => {
     });
 };
 
-const buildData = (option) => {
+const buildData = async (option) => {
     const config = Object.assign({}, option);
     const { cwd } = config;
 
-    return Promise.all([
+    const [branch, version] = await Promise.all([
         config.branch || branchName.assumeMaster({ cwd }),
         config.version || buildVersion({ cwd })
-    ])
-        .then((data) => {
-            return {
-                branch  : data[0],
-                version : data[1]
-            };
-        });
+    ]);
+
+    return {
+        branch,
+        version
+    };
 };
 
-buildData.latest = (option) => {
+buildData.latest = async (option) => {
     const config = Object.assign({}, option);
     const { branch, version, cwd } = config;
 
     if (branch && version) {
-        return Promise.resolve({
+        return {
             branch,
             version
-        });
+        };
     }
 
     const linkPath = branch ?
@@ -52,12 +51,11 @@ buildData.latest = (option) => {
         }) :
         'latest-build';
 
-    return realpath(path.join(cwd || '', linkPath)).then((resolvedPath) => {
-        return {
-            branch  : branch || path.basename(path.join(resolvedPath, '..')),
-            version : version || path.basename(resolvedPath)
-        };
-    });
+    const resolvedPath = await realpath(path.join(cwd || '', linkPath));
+    return {
+        branch  : branch || path.basename(path.join(resolvedPath, '..')),
+        version : version || path.basename(resolvedPath)
+    };
 };
 
 module.exports = buildData;
