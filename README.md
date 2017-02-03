@@ -83,19 +83,6 @@ Use the given version, instead of asking [build-version](https://github.com/shol
 
 Same as `buildData()`, except the `branch` defaults to the most recently built branch and `version` defaults to the most recently built version of the branch.
 
-### buildDir.link(option)
-
-Takes `cwd`, `branch`, and `version` on the option object.
-
-Within the `cwd`, writes a symlink at `latest-build` pointing to `build/<branch>/latest` and from there to `<version>`.
-
-### buildDir.prepare(option)
-
-Returns a promise for an object with these fields:
-
- - `path` is a newly created temporary directory for you to write the build to.
- - `finalize()` moves `path` to its final location and runs `buildDir.link()` on it.
-
 ## Related
 
  - [delivr](https://github.com/sholladay/delivr) - Build your code and ship it to S3.
