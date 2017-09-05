@@ -2,21 +2,12 @@
 
 const fs = require('fs');
 const path = require('path');
+const { promisify } = require('util');
 const branchName = require('branch-name');
 const buildVersion = require('build-version');
 const buildPath = require('build-path');
 
-const realpath = (filePath) => {
-    return new Promise((resolve, reject) => {
-        fs.realpath(filePath, (err, resolvedPath) => {
-            if (err) {
-                reject(err);
-                return;
-            }
-            resolve(resolvedPath);
-        });
-    });
-};
+const realpath = promisify(fs.realpath);
 
 const buildData = async (option) => {
     const config = Object.assign({}, option);
