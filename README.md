@@ -54,6 +54,12 @@ buildData({ version : '3.2.1' }).then((data) => {
 
 ### buildData(option)
 
+Returns a `Promise` for an `object` with the git `branch` and a newly generated `version`, based on the status of the `cwd`.
+
+### buildData.latest(option)
+
+Same as `buildData()`, except `branch` defaults to the most recently built branch and `version` defaults to the most recently built version of the `branch`.
+
 #### option
 
 Type: `object`
@@ -65,23 +71,19 @@ Settings and known build metadata.
 Type: `string`<br>
 Default: `process.cwd()`
 
-The parent directory of the build root.
+Parent directory of the build root.
 
 ##### branch
 
 Type: `string`
 
-Use the given branch name, instead of asking git.
+A git branch name, can be provided to improve performance or override git.
 
 ##### version
 
 Type: `string`
 
-Use the given version, instead of asking [build-version](https://github.com/sholladay/build-version).
-
-### buildData.latest(option)
-
-Same as `buildData()`, except the `branch` defaults to the most recently built branch and `version` defaults to the most recently built version of the branch.
+A [build version](https://github.com/sholladay/build-version), can be provided to improve performance or use a specific version.
 
 ## Related
 
